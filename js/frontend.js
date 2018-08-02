@@ -118,7 +118,8 @@
                 } else {
 
                     $.each( choices, function( i, choice ) {
-                        optionsMarkup += '<option value="' + choice.value + '">' + choice.text + '</option>';
+                    	var selected = choice.isSelected ? 'selected="selected"' : '';
+                        optionsMarkup += '<option value="' + choice.value + '"' + selected + '>' + choice.text + '</option>';
                     } );
 
                     $nextSelect.show().append( optionsMarkup );

@@ -1,13 +1,13 @@
-# Copyright 2009-2017 Rocketgenius, Inc.
+# Copyright 2009-2018 Rocketgenius, Inc.
 msgid ""
 msgstr ""
-"Project-Id-Version: Gravity Forms Chained Selects Add-On 1.0\n"
+"Project-Id-Version: Gravity Forms Chained Selects Add-On 1.0.9\n"
 "Report-Msgid-Bugs-To: http://www.gravtiyhelp.com\n"
-"POT-Creation-Date: 2017-08-02 15:38:19+00:00\n"
+"POT-Creation-Date: 2018-03-27 19:09:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Rocketgenius <customerservice@rocketgenius.com>\n"
 "Language-Team: Rocketgenius <customerservice@rocketgenius.com>\n"
 "X-Generator: Gravity Forms Build Server\n"
@@ -53,7 +53,7 @@ msgid "Loading"
 msgstr ""
 
 #: class-gf-chainedselects.php:167
-#: includes/class-gf-field-chainedselect.php:690
+#: includes/class-gf-field-chainedselect.php:709
 msgid "No options"
 msgstr ""
 
@@ -135,63 +135,67 @@ msgstr ""
 msgid "One of your columns has exceeded the limit for unique values."
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:330
+#: includes/class-gf-field-chainedselect.php:335
 msgid "File could not be loaded."
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:333
+#: includes/class-gf-field-chainedselect.php:337
 msgid "File is not a CSV file."
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:343
+#: includes/class-gf-field-chainedselect.php:339
+msgid "File is empty."
+msgstr ""
+
+#: includes/class-gf-field-chainedselect.php:354
 msgid "File is too large."
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:400
+#: includes/class-gf-field-chainedselect.php:419
 msgid "Import Choices"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:405
+#: includes/class-gf-field-chainedselect.php:424
 msgid "Your browser does not have Flash, Silverlight or HTML5 support."
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:407
+#: includes/class-gf-field-chainedselect.php:426
 msgid "Drop your file here or "
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:408
+#: includes/class-gf-field-chainedselect.php:427
 msgid "Select a file"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:411
+#: includes/class-gf-field-chainedselect.php:430
 msgid "Download a sample file: %ssample.csv%s"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:427
+#: includes/class-gf-field-chainedselect.php:446
 msgid "Drop Down Alignment"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:430
+#: includes/class-gf-field-chainedselect.php:449
 msgid "Horizontally (in a row)"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:431
+#: includes/class-gf-field-chainedselect.php:450
 msgid "Vertically (in a column)"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:436
+#: includes/class-gf-field-chainedselect.php:455
 msgid "Drop Down Display"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:440
+#: includes/class-gf-field-chainedselect.php:459
 msgid "Hide Inactive Drop Downs"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:470
+#: includes/class-gf-field-chainedselect.php:489
 msgid "Chained Selects"
 msgstr ""
 
-#: includes/class-gf-field-chainedselect.php:537
+#: includes/class-gf-field-chainedselect.php:556
 msgid "This field is required. Please select a value for each option."
 msgstr ""
 
@@ -200,7 +204,7 @@ msgid "Gravity Forms Chained Selects Add-On"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://www.gravityforms.com"
+msgid "https://www.gravityforms.com"
 msgstr ""
 
 #. Description of the plugin/theme
@@ -214,5 +218,5 @@ msgid "rocketgenius"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "http://www.rocketgenius.com"
+msgid "https://www.rocketgenius.com"
 msgstr ""

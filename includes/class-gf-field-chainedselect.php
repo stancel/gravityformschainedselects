@@ -99,7 +99,7 @@ class GF_Chained_Field_Select extends GF_Field {
 		    while ( ( $row = fgetcsv( $handle, 1000, ',' ) ) !== false ) {
 
 			    // filter out empty rows
-			    $row = array_filter( $row );
+			    $row = array_filter( $row, 'strlen' );
 			    if( empty( $row ) ) {
 				    continue;
 			    }
@@ -172,6 +172,7 @@ class GF_Chained_Field_Select extends GF_Field {
 
 	    $uniques = array();
 	    $limit   = apply_filters( 'gravityformschainedselects_column_unique_values_limit', 5000 );
+	    $limit   = apply_filters( 'gform_chainedselects_column_unique_values_limit', $limit );
 
 	    while ( ( $row = fgetcsv( $handle, 1000, ',' ) ) !== false ) {
 
@@ -292,9 +293,13 @@ class GF_Chained_Field_Select extends GF_Field {
 
 		    if( is_wp_error( $import ) ) {
 
-		    	$field->gfcsFile = null;
-			    $field->inputs   = gf_chained_selects()->get_default_inputs();
-			    $field->choices  = gf_chained_selects()->get_default_choices();
+		    	if( $field->gfcsFile == null ) {
+				    $field->inputs   = gf_chained_selects()->get_default_inputs();
+				    $field->choices  = gf_chained_selects()->get_default_choices();
+			    }
+
+			    // There was an error fetching the file. Let's check the file again in 60 seconds.
+			    $field->gfcsCacheExpiration = time() + 60;
 
 		    } else {
 
@@ -324,13 +329,19 @@ class GF_Chained_Field_Select extends GF_Field {
 	    $upload_dir = GFFormsModel::get_file_upload_path( $form['id'], sprintf( 'gfcs-field-%d-data.csv', $field->id ) );
 	    $handle     = fopen( $upload_dir['path'], 'w+' );
 	    $response   = wp_remote_get( $url );
+	    $error      = false;
 
 	    if( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) != 200 ) {
-	        fclose( $handle );
-		    return new WP_Error( 'file_inaccessible', __( 'File could not be loaded.', 'gravityformschainedselects' ) );
+		    $error = new WP_Error( 'file_inaccessible', __( 'File could not be loaded.', 'gravityformschainedselects' ) );
 	    } else if( wp_remote_retrieve_header( $response, 'content-type' ) != 'text/csv' ) {
+		    $error = new WP_Error( 'invalid_content_type', __( 'File is not a CSV file.', 'gravityformschainedselects' ) );
+	    } else if ( empty( wp_remote_retrieve_body( $response ) ) ) {
+		    $error = new WP_Error( 'empty', __( 'File is empty.', 'gravityformschainedselects' ) );
+	    }
+
+	    if( $error ) {
 		    fclose( $handle );
-		    return new WP_Error( 'invalid_content_type', __( 'File is not a CSV file.', 'gravityformschainedselects' ) );
+		    return $error;
 	    }
 
 	    $content = wp_remote_retrieve_body( $response );
@@ -374,6 +385,14 @@ class GF_Chained_Field_Select extends GF_Field {
 		$next_input_id = $field->get_next_input_id( $input_id );
 		$value         = rgpost( 'value' );
 		$choices       = $next_input_id ? $field->get_input_choices( $value, $next_input_id ) : array();
+
+		// Sanitize values before they're sent to frontend script for output.
+		// We might consider generating the full markup and passing that back but I originally went with passing the
+		// choices to provide flexibility to the script.
+		foreach( $choices as &$choice ) {
+			$choice['value'] = esc_attr( $choice['value'] );
+		}
+
 		die( json_encode( $choices ) );
 	}
 
@@ -447,7 +466,7 @@ class GF_Chained_Field_Select extends GF_Field {
 
 		$is_input_specific = (int) $rule['fieldId'] != $rule['fieldId'];
 
-		if ( $source_field && $source_field->get_input_type() == 'chainedselect' && ! $is_input_specific ) {
+		if ( ! $is_input_specific && $source_field instanceof GF_Chained_Field_Select ) {
 			$target_values = explode( '/', $target_value );
 			for ( $i = 0; $i < count( $target_values ); $i ++ ) {
 				if ( $target_values[ $i ] == '*' ) {
@@ -456,7 +475,7 @@ class GF_Chained_Field_Select extends GF_Field {
 			}
 			$target_value = implode( '/', $target_values );
 			$field_value  = implode( '/', $field_value );
-			$is_match = GFFormsModel::matches_operation( $field_value, $target_value, $operation );
+			$is_match     = GFFormsModel::matches_operation( $field_value, $target_value, $operation );
 		}
 
 		return $is_match;
@@ -640,7 +659,7 @@ class GF_Chained_Field_Select extends GF_Field {
 			$field->choices = null;
 		}
 
-		return GFCommon::get_select_choices( $field, $value );
+		return GFCommon::get_select_choices( $field, rgar( $value, $input['id'], '' ) );
 	}
 
 	public function get_input_choices( $chain_value, $input_id = false, $depth = false, $choices = null, $full_chain_value = null ) {

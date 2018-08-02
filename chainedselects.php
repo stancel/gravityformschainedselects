@@ -1,16 +1,17 @@
 <?php
 /*
 Plugin Name: Gravity Forms Chained Selects Add-On
-Plugin URI: http://www.gravityforms.com
+Plugin URI: https://www.gravityforms.com
 Description: Adds the powerful Chained Selects field type, allowing you to chain multiple Drop Downs together (e.g. Make, Model, Year).
-Version: 1.0
+Version: 1.0.9
 Author: rocketgenius
-Author URI: http://www.rocketgenius.com
+Author URI: https://www.rocketgenius.com
+License: GPL-2.0+
 Text Domain: gravityformschainedselects
 Domain Path: /languages
 
 ------------------------------------------------------------------------
-Copyright 2009 rocketgenius
+Copyright 2009 - 2018 rocketgenius
 last updated: October 20, 2010
 
 This program is free software; you can redistribute it and/or modify
@@ -28,7 +29,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-define( 'GF_CHAINEDSELECTS_VERSION', '1.0' );
+define( 'GF_CHAINEDSELECTS_VERSION', '1.0.9' );
 
 add_action( 'gform_loaded', array( 'GF_ChainedSelects_Bootstrap', 'load' ), 5 );
 

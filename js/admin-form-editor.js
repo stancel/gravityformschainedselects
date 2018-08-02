@@ -69,11 +69,6 @@
 
 					up.field = $.extend( {}, field );
 
-					var multipartParams = up.getOption( 'multipart_params' );
-					multipartParams.field_id = field.id;
-					multipartParams.form_id  = form.id;
-					up.setOption( 'multipart_params', multipartParams );
-
 					// reset's markup
 					document.getElementById( 'gfcs-progress' ).innerHTML = '';
 
@@ -144,6 +139,12 @@
 					updateUploadedFilePreview( up, file );
 
 					$( '#' + file.id ).attr( 'class', getStatusClass( file ) );
+
+					var multipartParams = up.getOption( 'multipart_params' );
+					multipartParams.field_id = field.id;
+					multipartParams.form_id  = form.id;
+					multipartParams.original_filename = file.name;
+					up.setOption( 'multipart_params', multipartParams );
 
 				} );
 
