@@ -114,7 +114,7 @@ class GF_Chained_Field_Select extends GF_Field {
 					    $inputs[] = array(
 						    'id'    => $field->id . '.' . $i,
 						    'label' => $item,
-						    'name'  => ''
+						    'name'  => isset( $field->inputs[ $index ]['name'] ) ? $field->inputs[ $index ]['name'] : '',
 					    );
 					    $i++;
 				    }
@@ -648,15 +648,20 @@ class GF_Chained_Field_Select extends GF_Field {
 		return $markup;
 	}
 
-	public function get_choices( $value, $input ) {
-		$field    = clone $this;
-		$is_first = $this->get_input_index( $input['id'] ) == 1;
+	public function get_choices( &$value, $input ) {
+
+		$field = clone $this;
+
 		// temporarily adjust placeholder to current input's label to play nice with GFCommon::get_select_choices()
 		$field->placeholder = $input['label'];
-		if ( $value || $is_first ) {
-			$field->choices = $this->get_input_choices( $value, $input['id'] );
-		} else {
-			$field->choices = null;
+		$field->choices = $this->get_input_choices( $value, $input['id'] );
+
+		if ( is_array( $field->choices ) ) {
+			foreach( $field->choices as $choice ) {
+				if ( rgar( $choice, 'isSelected' ) && ! rgar( $value, $input['id'] ) ) {
+					$value[ $input['id'] ] = $choice['value'];
+				}
+			}
 		}
 
 		return GFCommon::get_select_choices( $field, rgar( $value, $input['id'], '' ) );
@@ -726,7 +731,7 @@ class GF_Chained_Field_Select extends GF_Field {
 
 	public function get_value_entry_detail( $value, $currency = '', $use_text = false, $format = 'html', $media = 'screen' ) {
 
-		$filtered = array_filter( $value );
+		$filtered = is_array( $value ) ? array_filter( $value ) : '';
 		if( empty( $filtered ) ) {
 			return '';
 		}
@@ -814,6 +819,45 @@ class GF_Chained_Field_Select extends GF_Field {
 		$prev_input_value = rgar( $full_chain_value, $prev_input_id );
 
 		return $prev_input_value;
+	}
+
+	// # FIELD FILTER UI HELPERS ---------------------------------------------------------------------------------------
+
+	/**
+	 * Returns the sub-filters for the current field.
+	 *
+	 * @since
+	 *
+	 * @return array
+	 */
+	public function get_filter_sub_filters() {
+		$sub_filters = array();
+		$inputs      = $this->inputs;
+
+		foreach ( $inputs as $input ) {
+			$sub_filters[] = array(
+				'key'             => rgar( $input, 'id' ),
+				'text'            => rgar( $input, 'label' ),
+				'preventMultiple' => false,
+				'operators'       => $this->get_filter_operators(),
+			);
+		}
+
+		return $sub_filters;
+	}
+
+	/**
+	 * Returns the filter operators for the current field.
+	 *
+	 * @since
+	 *
+	 * @return array
+	 */
+	public function get_filter_operators() {
+		$operators   = parent::get_filter_operators();
+		$operators[] = 'contains';
+
+		return $operators;
 	}
 
 }
