@@ -63,6 +63,10 @@ class GF_Chained_Field_Select extends GF_Field {
             return;
         }
 
+        if ( ! wp_verify_nonce( rgpost( '_gform_file_upload_nonce_' . $form['id'] ), 'gform_file_upload_' . $form['id'] ) ) {
+			GFAsyncUpload::die_error( 403, esc_html__( 'Permission denied.', 'gravityforms' ) );
+		}
+
         $import = self::import_choices( $file_path, $field );
 
 	    if( is_wp_error( $import ) ) {
@@ -113,7 +117,7 @@ class GF_Chained_Field_Select extends GF_Field {
 					    }
 					    $inputs[] = array(
 						    'id'    => $field->id . '.' . $i,
-						    'label' => $item,
+						    'label' => wp_strip_all_tags( $item ),
 						    'name'  => isset( $field->inputs[ $index ]['name'] ) ? $field->inputs[ $index ]['name'] : '',
 					    );
 					    $i++;
