@@ -1,3 +1,11 @@
+### 1.4 | 2020-05-11
+- Added translations for Hebrew, Hindi, Japanese, and Turkish.
+- Fixed an issue where the import stalls with the spinner displayed if the uploaded csv contains malformed UTF-8 characters.
+- Fixed an issue with Gravity Forms 2.4.15.5+ where the placeholder choice is replaced with a duplicate first choice when the select is populated by the Ajax request.
+- Fixed an issue where dynamic population parameter names are lost when re-importing the csv file.
+- Fixed choices being imported from the csv file with leading and trailing spaces which could prevent the selected choice being saved on submission.
+
+
 ### 1.3 | 2019-08-07
 - Added security enhancements.
 
